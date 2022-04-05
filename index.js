@@ -1,5 +1,5 @@
 const mysql = require('mysql');
-const pingTime = 1000 * 5;
+const pingTime = 1000 * (60 * 15 - 5);
 const connectionParameters = {
     host: 'testconnection_mysql',
     user: 'myuser',
@@ -8,16 +8,12 @@ const connectionParameters = {
     port: '3306',
 };
 const checkConnection = async (mysqlClient) => {
-    try {
-        const results = await new Promise((resolve) => mysqlClient.query("SELECT 1", (err, results) => {
+    const results = await new Promise((resolve) => mysqlClient.query("SELECT 1", (err, results) => {
            if(err) throw err;
 	   resolve(results);
-	}));
-        console.log(new Date(), "Success:", results);
-        setTimeout(()=>checkConnection(mysqlClient), pingTime);
-    } catch (e) {
-        console.log(new Date(), "Error:", e);
-    }
+    }));
+    console.log(new Date(), "Success:", results);
+    setTimeout(()=>checkConnection(mysqlClient), pingTime);
 };
 const run = async () => {
     // Give time for MySQL Service to warm up
@@ -32,6 +28,10 @@ const run = async () => {
       resolve();
     }));
 
+    try {
     await checkConnection(mysqlClient);
+    } catch (e) {
+        console.log(new Date(), "Error:", e);
+    }
 };
 run();
