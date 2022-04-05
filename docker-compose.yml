@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:5.7.34
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpass
+      - MYSQL_USER=myuser
+      - MYSQL_PASSWORD=mypass
+      - MYSQL_DATABASE=mydatabase
+    volumes:
+      - ./mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+    command: "--wait_timeout=28800"
+    networks:
+      - app-network
+  nodejs:
+    image: node:12-alpine
+    working_dir: /app
+    volumes:
+      - ./:/app
+    depends_on:
+      - mysql
+    entrypoint: ["node", "/app/index.js"]
+    networks:
+      - app-network
+networks:
+  app-network:
+    external: true
