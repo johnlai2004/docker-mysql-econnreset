@@ -1,5 +1,5 @@
 const mysql = require('mysql');
-const pingTime = 1000 * (60 * 15 - 5);
+const pingTime = 1000 * (60 * 15 + 5);
 const connectionParameters = {
     host: 'testconnection_mysql',
     user: 'myuser',
